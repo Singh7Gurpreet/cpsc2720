@@ -1,0 +1,10 @@
+
+On your turn, the caller will announce the ball chosen.
+ - Your card will be displayed.
+ - You will be asked which player action you wish to take.
+ - Try to daub only the numbers called.
+ - If a number on your card has previously been daubed it will appear in braces.
+ - The goal is to be the first to daub the desired pattern for this game.
+ - If you believe you have won choose the Bingo action.
+ - Your card will be checked to see if you match the victory condition.
+ - If your card is correct then the game is over, otherwise play continues.
