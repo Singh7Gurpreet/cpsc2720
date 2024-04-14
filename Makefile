@@ -12,7 +12,7 @@
 ################################################################################
 
 # Executable names
-PROJECT = bingo
+PROJECT = project
 GTEST = test_${PROJECT}
 
 # Compilation command and flags
@@ -26,20 +26,14 @@ LINKFLAGS= -lgtest
 SRC_DIR = src
 PROJECT_SRC_DIR = src/project
 GTEST_DIR = test
-TEST_OUTPUT = ${GTEST_DIR}/output
 SRC_INCLUDE = include
 INCLUDE = -I ${SRC_INCLUDE}
-
-# Output Files
-CARD = bingoCardTest
-VALID = validityDisplayTest
-INSTRUCTIONS = bingoInstructions
 
 # Tool variables
 GCOV = gcov
 LCOV = lcov
-COVERAGE_RESULTS = docs/coverage/results.coverage
-COVERAGE_DIR = docs/coverage/results
+COVERAGE_RESULTS = results.coverage
+COVERAGE_DIR = coverage
 STATIC_ANALYSIS = cppcheck
 STYLE_CHECK = cpplint
 DESIGN_DIR = docs/design
@@ -50,7 +44,7 @@ DOXY_DIR = docs/code
 ################################################################################
 
 # Default goal
-.DEFAULT_GOAL := bingo
+.DEFAULT_GOAL := compileProject
 
 ################################################################################
 # Clean-up targets
@@ -62,12 +56,11 @@ clean-cov:
 
 .PHONY: clean-docs
 clean-docs:
-	rm -rf docs/code/src/
+	rm -rf docs/code/html
 
 .PHONY: clean-exec
 clean-exec:
-	rm -rf ${PROJECT} ${GTEST} ${PROJECT}.exe ${GTEST}.exe \
-	${TEST_OUTPUT}/*.actual
+	rm -rf ${PROJECT} ${GTEST} ${PROJECT}.exe ${GTEST}.exe
 
 .PHONY: clean-obj
 clean-obj:
@@ -90,7 +83,7 @@ clean: clean-cov clean-docs clean-exec clean-obj clean-temp
 # Compilaton targets
 ################################################################################
 
-# default rule for compiling .cpp to .o
+# default rule for compiling .cc to .o
 %.o: %.cpp
 	${CXX} ${CXXFLAGS} -c $< -o $@
 
@@ -99,27 +92,13 @@ clean: clean-cov clean-docs clean-exec clean-obj clean-temp
 # compilation for performing testing
 # using the files in include, src, and test, but not src/project
 ${GTEST}: ${GTEST_DIR} ${SRC_DIR} clean-exec
-	${CXX} ${CXXVERSION} -o ./${GTEST} ${INCLUDE} \
-	${GTEST_DIR}/*.o ${SRC_DIR}/*.cpp ${LINKFLAGS}
-
-# compilation for performing testing
-# using the files in include, src, and test, but not src/project
-# with the debug flag.
-${GTEST}_g: ${GTEST_DIR} ${SRC_DIR} clean-exec
 	${CXX} ${CXXFLAGS} -o ./${GTEST} ${INCLUDE} \
-	${GTEST_DIR}/*.o ${SRC_DIR}/*.cpp ${LINKFLAGS}
+	${GTEST_DIR}/*.cpp ${SRC_DIR}/*.cpp ${LINKFLAGS}
 
 # compilation for making the project
 # using the files in include, src, and src/project, but not test
-${PROJECT}: ${SRC_DIR} ${PROJECT_SRC_DIR} clean-exec
+compileProject: ${SRC_DIR} ${PROJECT_SRC_DIR} clean-exec
 	${CXX} ${CXXVERSION} -o ${PROJECT} ${INCLUDE} \
-	${SRC_DIR}/*.cpp ${PROJECT_SRC_DIR}/*.cpp
-
-# compilation for making the project
-# using the files in include, src, and src/project, but not test
-# with the debug flag
-${project}_g: ${SRC_DIR} ${PROJECT_SRC_DIR} clean-exec
-	${CXX} ${CXXFLAGS} -o ${PROJECT} ${INCLUDE} \
 	${SRC_DIR}/*.cpp ${PROJECT_SRC_DIR}/*.cpp
 
 ################################################################################
@@ -127,29 +106,16 @@ ${project}_g: ${SRC_DIR} ${PROJECT_SRC_DIR} clean-exec
 ################################################################################
 
 # To perform all tests
-all: ${GTEST} diffs memcheck coverage docs static style
-
-# To compare actual and expected output
-.PHONY: test_output_diff 
-diffs: ${GTEST}
-	./${GTEST}
-	diff -s ${TEST_OUTPUT}/${CARD}.actual ${TEST_OUTPUT}/${CARD}.expected
-	diff -s ${TEST_OUTPUT}/${VALID}.actual ${TEST_OUTPUT}/${VALID}.expected
-	diff -s ${TEST_OUTPUT}/${INSTRUCTIONS}.actual ${TEST_OUTPUT}/${INSTRUCTIONS}.expected
+all: ${GTEST} memcheck coverage docs static style
 
 # To perform the memory checks
 memcheck: ${GTEST}
 	valgrind --tool=memcheck --leak-check=yes --error-exitcode=1 ./${GTEST}
 
-fullmemcheck: ${GTEST}
-	valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --error-exitcode=1 ./${GTEST}
-
-
-
 # To perform the code coverage checks
 coverage: clean-exec clean-cov
 	${CXX} ${CXXWITHCOVERAGEFLAGS} -o ./${GTEST} ${INCLUDE} \
-	${GTEST_DIR}/*.o ${SRC_DIR}/*.cpp ${LINKFLAGS}
+	${GTEST_DIR}/*.cpp ${SRC_DIR}/*.cpp ${LINKFLAGS}
 	./${GTEST}
 	# Determine code coverage
 	${LCOV} --capture --gcov-tool ${GCOV} --directory . --output-file \
@@ -168,8 +134,9 @@ static: ${SRC_DIR} ${GTEST_DIR}
 	${SRC_INCLUDE} --suppress=missingInclude --error-exitcode=1
 
 # To perform the style check
-style: ${SRC_DIR} ${SRC_INCLUDE}
-	${STYLE_CHECK} ${SRC_DIR}/* ${SRC_INCLUDE}/*	
+style: ${SRC_DIR} ${GTEST_DIR} ${SRC_INCLUDE} ${PROJECT_SRC_DIR}
+	${STYLE_CHECK} ${SRC_DIR}/* ${GTEST_DIR}/* ${SRC_INCLUDE}/* \
+	${PROJECT_SRC_DIR}/*
 
 ################################################################################
 # Documentation target
@@ -180,12 +147,22 @@ style: ${SRC_DIR} ${SRC_INCLUDE}
 docs: ${SRC_INCLUDE}
 	doxygen ${DOXY_DIR}/doxyfile
 
+# To produce version report
+.PHONY: version
+version:
+	doxygen --version
+	cppcheck --version
+	cpplint --version
+	gcc --version
+	${VERSION}
+	gcov --version
+	lcov --version
+	valgrind --version
+# Ask Trent where this script can be found
+#	gtest-config
+
 ################################################################################
 # Revision History
-################################################################################
-# Updated: 2023-10-19 Nicole Wilson <n.wilson@uleth.ca>
-#  Updated and added compilation targets so that compilation normally doesn't
-# use -g (debug - includes source code) but targets that do use it are available.
 ################################################################################
 # Updated: 2022-12-15 Nicole Wilson <n.wilson@uleth.ca>
 #  Removed all references to OS as the pipelines are now running on Ubuntu

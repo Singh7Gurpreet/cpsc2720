@@ -1,26 +1,26 @@
-## Bingo Game Project
+# Template for CPSC2720 Major Project: Text-based Adventure Game
 
-# Specifications
 
-# Sample output
-* This example shows one bingo card.
-* A horizontal line made of plus signs and dashes appears at the top, bottom, and after the header.
-* The header displays the column letters B, I, N, G, and O.
-* Daubed squares are indicated by encasing the number in round braces.
-* The free square is always daubed.
-* Vertical bars are used as column delimiters.
-* The interior of each column has a width of 6 characters.
-  * The first and last character are always blank.
-  * The numbers are all displayed in 2 digits.
-  * All numbers and letters are right aligned at the fourth character of the column.
-<pre>
- +------+------+------+------+------+ 
- |   B  |   I  |   N  |   G  |   O  | 
- +------+------+------+------+------+ 
- |  04  |  22  |  45  |  46  |  65  | 
- |  06  |  27  | (43) |  54  |  67  | 
- |  05  |  19  | free | (49) |  70  | 
- |  07  | (20) |  38  |  56  |  74  | 
- |  02  |  16  |  41  | (58) | (73) | 
- +------+------+------+------+------+ 
-</pre>
+Last Updated: 2022-12-15 by Nicole Wilson &lt;n.wilson@uleth.ca&gt;
+
+Notes:
+
+* The Makefile and .gitlab-ci.yml files are set up to run on Ubuntu.
+* The .gitlab-ci.yml file uses the targets in the Makefile.
+* These are the tools/commands/apps used:
+  * Compiler: g++
+  * Style Check: cpplint
+  * Static Check: cppcheck
+  * Coverage Check: gcov/lcov
+  * Memory Check: valgrind
+  * Unit Test: gtest 
+  * Documentation: doxygen
+* See the version report on the pipeline.
+
+Certain assumptions have been made:
+* One repo contains the files for one project.
+* All unit testing files are found in <code>test/</code> including <code>main.cpp</code>.
+* All header files for the project are found in <code>include/</code> and named <code>*.h</code>, every class must have a header file.
+* All project source files for the project are named <code>*.cpp</code>.
+  * Any needed source files that correspond to header files are found in <code>src/</code>.
+  * There is a <code>main.cpp</code> found in <code>src/project/</code>.

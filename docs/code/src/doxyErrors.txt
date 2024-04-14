@@ -1,0 +1,12 @@
+/home/rais2720/Desktop/p-2-group-e/include/Item.h:7: warning: Compound Item is not documented.
+/home/rais2720/Desktop/p-2-group-e/include/PlaceboClass.h:7: warning: Compound PlaceboClass is not documented.
+/home/rais2720/Desktop/p-2-group-e/include/Item.h:17: warning: Member Item(const std::string &initName, const std::string &initDescription, int initUses) (function) of class Item is not documented.
+/home/rais2720/Desktop/p-2-group-e/include/Item.h:20: warning: Member getName() const (function) of class Item is not documented.
+/home/rais2720/Desktop/p-2-group-e/include/Item.h:23: warning: Member setName(const std::string &newName) (function) of class Item is not documented.
+/home/rais2720/Desktop/p-2-group-e/include/Item.h:26: warning: Member getDescription() const (function) of class Item is not documented.
+/home/rais2720/Desktop/p-2-group-e/include/Item.h:29: warning: Member setDescription(const std::string &newDescription) (function) of class Item is not documented.
+/home/rais2720/Desktop/p-2-group-e/include/Item.h:32: warning: Member getUses() const (function) of class Item is not documented.
+/home/rais2720/Desktop/p-2-group-e/include/Item.h:35: warning: Member setUses(int newUses) (function) of class Item is not documented.
+/home/rais2720/Desktop/p-2-group-e/include/Item.h:9: warning: Member name (variable) of class Item is not documented.
+/home/rais2720/Desktop/p-2-group-e/include/Item.h:10: warning: Member description (variable) of class Item is not documented.
+/home/rais2720/Desktop/p-2-group-e/include/Item.h:11: warning: Member uses (variable) of class Item is not documented.
